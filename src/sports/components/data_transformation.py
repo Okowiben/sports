@@ -17,6 +17,7 @@ class DataTransformation:
 
     def get_data_transform(self, df: pd.DataFrame,  name: str ="",
                            transform_numertical: bool = True) -> tuple[pd.DataFrame, list , list]:
+
         
            logging.info('get data transform has started')
 
@@ -62,7 +63,7 @@ class DataTransformation:
 
         
 
-    def initiate_data_transformation(self , train_path:str ,test_path: str, target_column:str, file_path: str) -> tuple[np.ndarray ,np.ndarray]:
+    def initiate_data_transformation(self , train_path:str ,test_path: str, target_column:str, file_path: str) -> tuple[pd.DataFrame,pd.Series,pd.DataFrame,pd.Series]:
         try:
             logging.info('reading the train and test dataframes')
             train_df = pd.read_csv(train_path)
@@ -97,18 +98,13 @@ class DataTransformation:
             logging.info('test set completed')
 
 
-            train_arr = np.column_stack((X_train,y_train))
-            test_arr  = np.column_stack((X_test,y_test))
+            
 
             save_obj(self.data_transformation_config.preprossor_obj_file_path,file_transform)
 
 
             logging.info('Data transformation completed successfully')
 
-            return train_arr , test_arr
+            return X_train,y_train,X_test,y_test
         except Exception as e:
             logging.error(f'Error in data transformation : {CustomException(e,sys)}')
-
-
-
-

@@ -11,6 +11,7 @@ from sports.components.model import ModelTrainer
 
 
 
+
 class DataIngestion:
     def __init__(self) -> None:
         self.ingestion_config = DataIngestionConfig()
@@ -93,12 +94,17 @@ if __name__ == '__main__':
        train_data,test_data , file_path =ben.initiate_data_ingestion()
    
        DataTransormation = DataTransformation()  
-       train_arr, test_arr = DataTransormation.initiate_data_transformation(train_path=train_data,test_path=test_data, target_column='high_traffic',file_path=file_path)
+       X_train,y_train,X_test,y_test = DataTransormation.initiate_data_transformation(train_path=train_data,test_path=test_data,target_column='high_traffic',file_path=file_path)
+
+       eveluate = ModelTrainer()
+       eve = eveluate.initiate_model_trainer(X_train,y_train,X_test,y_test)
+       logging.info(eve)
+    
+
+       
 
 
-#       moel = ModelTrainer()
-
-#       moel.initiate_model_trainer(train_arr=train_arr ,test_arr=test_arr)
+       
    
        logging.info('Pipeline has ended')
        
