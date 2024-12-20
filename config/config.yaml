@@ -1,0 +1,28 @@
+data_root: data
+
+
+data_ingestion:
+  root_dir: data/data_ingestion
+  source_dir: C:\Users\mario\Desktop\sports\notebook\recipe_site_traffic_2212.csv
+  cleaned_dir: data/data_ingestion/clean_data.csv
+  train_dir: data/data_ingestion/train.csv
+  test_dir: data/data_ingestion/test.csv
+
+data_validation:
+    root_dir: data/data_validation
+    data_dir: C:\Users\mario\Desktop\sports\data\data_ingestion\clean_data.csv
+    status_file: data/data_validation/status.txt
+    
+
+data_tranasformation:
+    root_dir: data/data_transformation
+    data_dir: C:\Users\mario\Desktop\sports\data\data_ingestion\clean_data.csv
+    train_dir: data/data_ingestion/train.csv
+    test_dir: data/data_ingestion/test.csv
+    transform_dir: data/data_transformation/preprosseor.pkl
+    target: 'high_traffic'
+
+model_development:
+  root_dir:  data/model
+
+

@@ -4,15 +4,14 @@ import pandas as pd
 from scipy.stats import  yeojohnson
 from sports.utils.expection import CustomException
 from sports.utils.loger import logging
-from sports.config.configuration import DataTransformationConfig,DataIngestionConfig
+from sports.config.configuration import ConfigurationManager
 from sports.constants.tans import calculate_outlier_limits
 from sports.utils import save_obj
 
 
 class DataTransformation:
-    def __init__(self):
-        self.data_transformation_config = DataTransformationConfig()
-        self.ingestion_config = DataIngestionConfig()
+    def __init__(self, config = ConfigurationManager()):
+        self.data_transform = config
 
 
     def get_data_transform(self, df: pd.DataFrame,  name: str ="",
@@ -63,12 +62,13 @@ class DataTransformation:
 
         
 
-    def initiate_data_transformation(self , train_path:str ,test_path: str, target_column:str, file_path: str) -> tuple[pd.DataFrame,pd.Series,pd.DataFrame,pd.Series]:
+    def initiate_data_transformation(self) -> tuple[pd.DataFrame,pd.Series,pd.DataFrame,pd.Series]:
         try:
+            transform=  self.data_transform.get_data_transformation_config()
             logging.info('reading the train and test dataframes')
-            train_df = pd.read_csv(train_path)
-            test_df =  pd.read_csv(test_path)
-            file_df = pd.read_csv(file_path)
+            train_df = pd.read_csv(transform.train_dir)
+            test_df =  pd.read_csv(transform.test_dir)
+            file_df = pd.read_csv(transform.data_dir)
             logging.info('reading completed')
 
             logging.info(f'applying comprehansive transformation on {train_df} and {test_df} ')
@@ -90,17 +90,19 @@ class DataTransformation:
             test_final = pd.concat([test_transfrom.drop(columns=cat_cols), test_encoded], axis=1)
 
 
-            X_train = train_final.drop(columns=target_column)
-            y_train = train_final[target_column]
+            X_train = train_final.drop(columns = transform.target)
+            X_train.to_csv()
+            
+            y_train = train_final[transform.target]
             logging.info('train set completed')
-            X_test = test_final.drop(columns=target_column, axis=1)
-            y_test = test_final[target_column]
+            X_test = test_final.drop(columns= transform.target, axis=1)
+            y_test = test_final[transform.target]
             logging.info('test set completed')
 
 
             
 
-            save_obj(self.data_transformation_config.preprossor_obj_file_path,file_transform)
+            save_obj(transform.transform_dir,file_transform)
 
 
             logging.info('Data transformation completed successfully')

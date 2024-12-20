@@ -5,19 +5,17 @@ from sports.utils.loger import logging
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sports.config.configuration import DataIngestionConfig
-from sports.components.data_transformation import DataTransformation
-from sports.components.model import ModelTrainer
-
+from  sports.config.configuration import ConfigurationManager
 
 
 
 class DataIngestion:
-    def __init__(self) -> None:
-        self.ingestion_config = DataIngestionConfig()
+    def __init__(self, config = ConfigurationManager()):
+        self.ingestion_config = config
 
     def get_clean_data(self, df:pd.DataFrame) -> pd.DataFrame:
         try:
+            
 
           logging.info('data cleaning has started')
           #checking for duplicated rows in the data frame 
@@ -57,31 +55,35 @@ class DataIngestion:
     def initiate_data_ingestion(self):
         logging.info('Entered the data ingestion component')
         try:
-            df = pd.read_csv(r'C:\Users\mario\Desktop\sports\notebook\recipe_site_traffic_2212.csv')
+            ing = self.ingestion_config.get_data_ingestion_config()
+            df = pd.read_csv(ing.source_dir)
             df_clean = self.get_clean_data(df)
             logging.info('read the dataset as dataframe')
             
-            os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
+            os.makedirs(os.path.dirname(ing.root_dir), exist_ok=True)
 
-            df_clean.to_csv(self.ingestion_config.raw_data_path,index=False , header=True)
+            df_clean.to_csv(ing.cleaned_dir,index=False , header=True)
 
             logging.info('Train test split initiated')
             train_set,test_set = train_test_split(df_clean,test_size=0.2,random_state=40)
 
-            train_set.to_csv(self.ingestion_config.train_data_path, index=False,header=True)
-            test_set.to_csv(self.ingestion_config.test_data_path, index=False,header=True)
+            train_set.to_csv(ing.train_dir, index=False,header=True)
+            test_set.to_csv(ing.test_dir, index=False,header=True)
 
             logging.info('Ingestion of the data is completed')
 
             return (
-                self.ingestion_config.train_data_path,
-                self.ingestion_config.test_data_path,
-                self.ingestion_config.raw_data_path
+                ing.train_dir,
+                ing.test_dir,
+                ing.root_dir
             )
 
         except Exception as e:
             logging.info(CustomException(e,sys))
             raise CustomException(e,sys)
         
+        logging.info('Data ingestion has ended')
 
-
+def main():
+    data_ingest = DataIngestion()
+    data_ingest.initiate_data_ingestion()

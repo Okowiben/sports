@@ -1,0 +1,12 @@
+Columns:
+  recipe        :    int64   
+  calories      :    float64 
+  carbohydrate  :    float64 
+  sugar         :    float64 
+  protein       :    float64 
+  category      :    category
+  servings      :    int64   
+#  high_traffic  :    bool 
+
+Target_column:
+  high_traffic  :    bool 
