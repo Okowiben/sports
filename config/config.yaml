@@ -20,9 +20,16 @@ data_tranasformation:
     train_dir: data/data_ingestion/train.csv
     test_dir: data/data_ingestion/test.csv
     transform_dir: data/data_transformation/preprosseor.pkl
+    transformed_train_dir: data/data_transformation/transformed_train.csv
+    transformed_test_dir: data/data_transformation/transformed_test.csv
     target: 'high_traffic'
 
 model_development:
   root_dir:  data/model
+  transformed_train_dir: data/data_transformation/transformed_train.csv
+  transformed_test_dir: data/data_transformation/transformed_test.csv
+  target: 'high_traffic'
+  model_obj: data/model/model.pkl
+   
 
 

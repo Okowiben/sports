@@ -4,7 +4,7 @@ import sys
 from dataclasses import dataclass
 from sports.constants import CONFIG_FILE_PATH,PARAMS_FILE_PATH, SCHEMA_FILE_PATH
 from sports.utils.common import read_yaml,create_directories
-from sports.entity import DataIngestionConfig ,DataValidationConfig, DataTransformationConfig
+from sports.entity import DataIngestionConfig ,DataValidationConfig, DataTransformationConfig, DataModelConfig
 from ensure import ensure_annotations
 
 
@@ -69,6 +69,25 @@ class ConfigurationManager:
             train_dir= config.train_dir,
             test_dir= config.test_dir,
             transform_dir= config.transform_dir,
+            transformed_test_dir= config.transformed_test_dir,
+            transformed_train_dir= config.transformed_train_dir,
             target= config.target
         )    
         return data_transformation_config
+    
+    def get_data_model_config(self) -> DataModelConfig:
+        config = self.config.model_development
+
+        create_directories([config.root_dir])
+
+        data_model_config = DataModelConfig(
+            root_dir= config.root_dir,
+            transformed_train_dir= config.transformed_train_dir,
+            transformed_test_dir= config.transformed_test_dir,
+            target= config.target,
+            model_obj= config.model_obj
+            )
+        return data_model_config
+
+
+    

@@ -90,15 +90,8 @@ class DataTransformation:
             test_final = pd.concat([test_transfrom.drop(columns=cat_cols), test_encoded], axis=1)
 
 
-            X_train = train_final.drop(columns = transform.target)
-            X_train.to_csv()
-            
-            y_train = train_final[transform.target]
-            logging.info('train set completed')
-            X_test = test_final.drop(columns= transform.target, axis=1)
-            y_test = test_final[transform.target]
-            logging.info('test set completed')
-
+            train_final.to_csv(transform.transformed_train_dir)
+            test_final.to_csv(transform.transformed_test_dir)
 
             
 
@@ -107,6 +100,6 @@ class DataTransformation:
 
             logging.info('Data transformation completed successfully')
 
-            return X_train,y_train,X_test,y_test
+            return train_final,test_final
         except Exception as e:
             logging.error(f'Error in data transformation : {CustomException(e,sys)}')

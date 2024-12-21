@@ -11,7 +11,7 @@ class DataIngestionConfig:
    test_dir: Path
 
 
-@dataclass
+@dataclass(frozen=True)
 class DataValidationConfig:
    root_dir: Path
    data_dir: str
@@ -19,14 +19,25 @@ class DataValidationConfig:
    all_schema: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class DataTransformationConfig:
    root_dir: Path
    data_dir: Path
    train_dir: Path
    test_dir: Path
    transform_dir: Path
+   transformed_train_dir: Path
+   transformed_test_dir: Path
    target: str
+
+@dataclass(frozen=True)
+class DataModelConfig:
+   root_dir: Path
+   transformed_train_dir: Path
+   transformed_test_dir: Path
+   target: str
+   model_obj: Path
+ 
    
 
 

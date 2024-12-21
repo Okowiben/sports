@@ -1,37 +1,26 @@
-from sports.components.data_ingest import DataIngestion
-from sports.components.data_transformation import DataTransformation
-from sports.components.model import ModelTrainer
-from sports.utils.expection import CustomException
+import subprocess
 from sports.utils.loger import logging
+from sports.utils.expection import CustomException
 import sys
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
+    """Main Pipeline Execution"""
     try:
-       logging.info('<<<<<<<<<******>>>>>>>>')
+        logging.info('Pipeline execution started')
 
-       logging.info('Pipeline was started')
-       ben = DataIngestion()
-       train_data,test_data , file_path =ben.initiate_data_ingestion()
-   
-       DataTransormation = DataTransformation()  
-       X_train,y_train,X_test,y_test = DataTransormation.initiate_data_transformation(train_path=train_data,test_path=test_data,target_column='high_traffic',file_path=file_path)
+        # Data Ingestion Stage
+        subprocess.run(["python", "src/sports/pipeline/data_ingestion_stage.py"], check=True)
 
-       eveluate = ModelTrainer()
-       eve = eveluate.initiate_model_trainer(X_train,y_train,X_test,y_test)
-       
-    
+        # Data Validation Stage
+        subprocess.run(["python", "src/sports/pipeline/data_validation_stage.py"], check=True)
 
-       
+        # Data Transformation Stage
+        subprocess.run(["python", "src/sports/pipeline/data_transformation_stage.py"], check=True)
 
+        # Model Training Stage
+        subprocess.run(["python", "src/sports/pipeline/model_trainer_stage.py"], check=True)
 
-       
-   
-       logging.info('Pipeline has ended')
-       
-       logging.info('<<<<<<<<<******>>>>>>>>')
-
-    except Exception  as e:
-       raise CustomException(e,sys)
-
-
+        logging.info('Pipeline execution completed successfully')
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Pipeline execution failed: {str(e)}")
+        sys.exit(1)
