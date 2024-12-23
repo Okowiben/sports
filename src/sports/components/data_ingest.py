@@ -53,6 +53,9 @@ class DataIngestion:
 
 
     def initiate_data_ingestion(self):
+        """
+        this funtion
+        """
         logging.info('Entered the data ingestion component')
         try:
             ing = self.ingestion_config.get_data_ingestion_config()
@@ -78,11 +81,13 @@ class DataIngestion:
                 ing.root_dir
             )
 
+            
+
         except Exception as e:
             logging.info(CustomException(e,sys))
             raise CustomException(e,sys)
         
-        logging.info('Data ingestion has ended')
+        
 
 def main():
     data_ingest = DataIngestion()

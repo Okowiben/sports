@@ -23,4 +23,5 @@ if __name__ == "__main__":
         logging.info('Pipeline execution completed successfully')
     except subprocess.CalledProcessError as e:
         logging.error(f"Pipeline execution failed: {str(e)}")
-        sys.exit(1)
+        logging.info(CustomException(e,sys))
+        sys.exit(1) 
